@@ -2,30 +2,51 @@ import fs from "fs";
 import matter from "gray-matter";
 import path from "path";
 import dayjs from "dayjs";
+import { sync } from "glob";
+import { Post } from "../types/types";
 const BASE_PATH = "/src/posts";
-
 const POSTS_PATH = path.join(process.cwd(), BASE_PATH);
 
-const parsePostDetail = async (postPath: string) => {
+// 파일 파싱
+export const parsePostDetail = async (postPath: string): Promise<Post> => {
   const file = fs.readFileSync(postPath, "utf-8");
   const { data: grayMatter, content } = matter(file);
-  const dateString = dayjs(grayMatter.date).format("YYYY-MM-DD");
-  return { ...grayMatter, dateString, content };
+
+  const title = grayMatter.title || "제목없음";
+  const date = new Date(grayMatter.date || Date.now());
+  const dateString = dayjs(date).format("YYYY-MM-DD");
+  const thumbnail = grayMatter.thumbnail || "/posts/default-thumbnail.jpg";
+  const desc = grayMatter.desc || "";
+
+  return {
+    title,
+    date,
+    dateString,
+    thumbnail,
+    desc,
+    content,
+  };
 };
 
-const parsePostAbstract = (postPath: string) => {
-  const filePath = postPath
-    .slice(postPath.indexOf(BASE_PATH))
-    .replace(`${BASE_PATH}/`, "")
-    .replace(".mdx", "");
-
-  const [category, slug] = filePath.split("/");
-  const url = `/posts/${category}/${slug}`;
-  return { url, category, slug };
+//slug 추출
+export const getPaths = () => {
+  const paths: string[] = sync(`${POSTS_PATH}/*.mdx`);
+  return paths;
 };
 
-export const parsePost = async (postPath: string) => {
-  const postAbstract = await parsePostAbstract(postPath);
-  const postDetail = await parsePostDetail(postPath);
-  return { ...postAbstract, ...postDetail };
+export const getPostList = async () => {
+  const paths: string[] = getPaths();
+  const posts = await Promise.all(
+    paths.map(async (url) => {
+      const postDetail = await parsePostDetail(url);
+      return { postDetail, url };
+    })
+  );
+
+  const sortedPostList = posts.sort((a, b) => {
+    const dateA = new Date(a.postDetail.date).getTime();
+    const dateB = new Date(b.postDetail.date).getTime();
+    return dateB - dateA;
+  });
+  return sortedPostList;
 };
