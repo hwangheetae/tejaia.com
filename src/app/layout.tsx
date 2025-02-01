@@ -1,15 +1,6 @@
 import type { Metadata } from "next";
 import Header from "@/components/header/page";
 import "./globals.css";
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
 
 export const metadata: Metadata = {
   title: "tejaia.blog",
@@ -25,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Header />
-        {children}
+        <main className="flex-1 w-full max-w-4xl mx-auto px-4">{children}</main>
       </body>
     </html>
   );

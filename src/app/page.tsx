@@ -1,9 +1,9 @@
-import Introduction from "@/components/introduction/page";
-import PostList from "@/components/post/post-list/page";
+// import Introduction from "@/components/introduction/page";
+import PostList from "@/components/post/post-list/PostList";
 export default function Home() {
   return (
     <div>
-      <Introduction />
+      {/* <Introduction /> */}
       <PostList />
     </div>
   );

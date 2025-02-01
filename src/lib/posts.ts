@@ -7,8 +7,19 @@ import { Post } from "../types/types";
 const BASE_PATH = "/src/posts";
 const POSTS_PATH = path.join(process.cwd(), BASE_PATH);
 
+export interface ParsePostDetailProps {
+  title: string;
+  date: Date;
+  dateString: string;
+  thumbnail: string;
+  desc: string;
+  content: string;
+}
+
 // 파일 파싱
-export const parsePostDetail = async (postPath: string): Promise<Post> => {
+export const parsePostDetail = async (
+  postPath: string
+): Promise<ParsePostDetailProps> => {
   const file = fs.readFileSync(postPath, "utf-8");
   const { data: grayMatter, content } = matter(file);
 
@@ -34,7 +45,7 @@ export const getPaths = () => {
   return paths;
 };
 
-export const getPostList = async () => {
+export const getPostList = async (): Promise<Post[]> => {
   const paths: string[] = getPaths();
   const posts = await Promise.all(
     paths.map(async (url) => {

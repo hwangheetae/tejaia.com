@@ -1,4 +1,4 @@
-import PostBody from "@/components/post/post-body/page";
+import TotalPost from "@/components/post/total-post/TotalPost";
 import { getPaths, parsePostDetail } from "@/lib/posts";
 import path from "path";
 
@@ -10,7 +10,7 @@ export default async function Page({
   const slug = (await params).slug;
   const postPath = path.join(process.cwd(), "src", "posts", `${slug}.mdx`);
   const post = await parsePostDetail(postPath);
-  return <PostBody post={post} />;
+  return <TotalPost post={post} />;
 }
 
 export const generateStaticParams = async () => {

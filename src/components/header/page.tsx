@@ -1,15 +1,28 @@
 import Link from "next/link";
+import { Card } from "@/components/ui/card";
 
 const Header = () => {
   return (
-    <ul>
-      <li>
-        <Link href="/">Home</Link>
-      </li>
-      <li>
-        <Link href="/about">About</Link>
-      </li>
-    </ul>
+    <Card className="bg-white shadow-md p-4">
+      <nav>
+        <ul className="flex items-center space-x-6">
+          <li>
+            <Link
+              href="/"
+              className="text-gray-800 text-lg font-semibold hover:text-gray-600"
+            >
+              tejaia.blog
+            </Link>
+          </li>
+          {/* Uncomment below for additional links */}
+          {/* <li>
+            <Link href="/about">
+              <a className="text-gray-800 text-lg font-semibold hover:text-gray-600">About</a>
+            </Link>
+          </li> */}
+        </ul>
+      </nav>
+    </Card>
   );
 };
 

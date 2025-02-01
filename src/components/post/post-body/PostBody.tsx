@@ -5,15 +5,14 @@ import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
-import { Post } from "../../../types/types";
 
-interface Props {
-  post: Post;
+interface ContentProps {
+  content: string;
 }
-const PostBody = ({ post }: Props) => {
+const PostBody = ({ content }: ContentProps) => {
   return (
     <MDXRemote
-      source={post.content}
+      source={content}
       //   components={MdxComponents}
       options={{
         mdxOptions: {
