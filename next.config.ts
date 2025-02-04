@@ -1,7 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "velog.velcdn.com",
+        port: "",
+        pathname: "/images/tejaia/post/**",
+        search: "",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

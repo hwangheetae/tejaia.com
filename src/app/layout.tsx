@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "@/components/header/page";
 import "./globals.css";
+import Notification from "@/components/notification/Notification";
 
 export const metadata: Metadata = {
   title: "tejaia.blog",
@@ -16,7 +17,8 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Header />
-        <main className="flex-1 w-full max-w-4xl mx-auto px-4">{children}</main>
+        <Notification />
+        <main className="flex-1 w-full max-w-3xl mx-auto px-4">{children}</main>
       </body>
     </html>
   );

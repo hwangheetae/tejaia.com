@@ -10,10 +10,10 @@ interface PostProps {
 const TotalPost = ({ post }: PostProps) => {
   const { content, ...postDetail } = post;
   return (
-    <>
+    <div>
       <PostHead grayMatter={postDetail} />
       <PostBody content={content} />
-    </>
+    </div>
   );
 };
 

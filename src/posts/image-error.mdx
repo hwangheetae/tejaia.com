@@ -1,0 +1,190 @@
+---
+title: "🌲[깊은산골짜기] 이미지 업로드 에러 해결하기"
+date: 2024-10-06
+desc: 이미지 용량제한 문제 해결하기
+thumbnail: /posts/image-error-thumbnail.jpg
+---
+
+## 배경
+
+‘**깊은산골짜기**’ 프로젝트를 마치고, 친구들과 함께 계곡에 방문한 저는 제가 만든 서비스를 자랑하고자 깊은산골짜기를 소개하고 사진을 찍어 리뷰를 작성했습니다. 하지만 개발환경 및 집에서는 발견하지 못한, 처음 보는 500 에러를 발견하였습니다. 단순한 리뷰나 사용자 명 변경에서는 문제가 발생하지 않았지만, 이미지 업로드 시 에러가 지속적으로 발생했습니다. 집으로 돌아온 후 다시 테스트를 해보니, 신기하게도 계곡에서는 분명 발생했던 이미지 에러가 다시 발생하지 않는 것이었습니다.
+
+<img
+  src="https://velog.velcdn.com/images/tejaia/post/f6ca9e2c-fc21-45b1-afeb-735b2f491d2d/image.png"
+  width="30%"
+  height="30%"
+/>
+
+이미 프로젝트는 완료되었고 팀원들도 뿔뿔히 흩어진 상황에서 `특정 상황에서만 발생하는 문제를 수정해야 하나` 라는 고민에 빠졌습니다. 하지만 가장 핵심 기능 중 하나였던 기능이 동작하지 않는다면 불편함을 느낀 사용자들의 서비스 이용에 불편함을 주고, 프로젝트의 목표를 잃는 거라 생각하였습니다.
+
+---
+
+## 오류 원인 분석
+
+이 문제가 프론트엔드의 문제인지 백엔드의 문제인지 알 수 없었지만 Spring을 몰랐던 저는 우선 프론트엔드 상에서 해당 문제를 해결하고자 했습니다. 우선, 프론트엔드 상에서 이 오류의 원인을 찾고자 했습니다. 제가 생각한 원인으로는
+
+> 1.  당시가 월말이었기 때문에, 3g 무제한 요금제로 인한 **느린 네트워크** (업로드 시간 초과)
+> 2.  **PWA 설정 테스트 중, 뭔가를 건드려서 발생한 에러**
+> 3.  PC와 모바일 **실행환경에서의 차이**
+> 4.  **이미지 크기 제한**
+
+이렇게 4가지가 있었는데, 가장 유력했던 부분은 PWA와 관련된 부분이었습니다.
+이를 확인하기 위해 다음과 같은 실험을 계획했습니다
+
+> 1.  **실행 환경별 테스트**
+>
+> - 로컬 환경과 배포 환경, PWA에서 테스트.
+> - 데스크톱과 모바일 기기를 사용해 테스트.
+>
+> 2.  **샘플 이미지 분류**
+>
+> - 이미지 크기(용량)를 1MB부터 10MB까지 분류.
+
+이를 테스트 하기 위한 샘플 이미지는 구글에서 적당한 짤을 찾아 사용했는데, 대용량의 이미지는 이 [블로그](https://medium.com/@typoholic01/%EA%B3%A0%EC%9A%A9%EB%9F%89-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%82%AC%EC%9D%B4%ED%8A%B8-b6c0fea2a4f4)를 참고하여 구할 수 있었습니다.
+
+#### 테스트결과
+
+| ![Slide 1](https://velog.velcdn.com/images/tejaia/post/6f4209ca-f063-48c3-86a0-b41a71890e0a/image.png) | ![Slide 2](https://velog.velcdn.com/images/tejaia/post/3c0c2c5d-a8fe-40cb-8fbe-7aa4b4e1a013/image.png) | ![Slide 3](https://velog.velcdn.com/images/tejaia/post/47d230c9-5ce6-4dfc-8fe3-c07fb40e59fd/image.png) |
+| :----------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------: |
+
+<p align="center">
+  <span style={{ color: "gray", fontSize: "14px" }}>
+    notion에 저장한 테스트결과들
+  </span>
+</p>
+
+일주일정도의 테스트 _~~(노가다)~~_ 를 마친 후, 특정 이미지 용량 이상에서 에러가 발생함을 확인할 수 있었습니다. 이를 통해 **업로드하는 이미지 용량이 특정 사이즈 이상일 때** 500 에러가 재현된다는 사실을 유추할 수 있었고, 아마 이미지 사이즈가 너무 커서 발생하는 문제는 아닐까 라는 가정하에 해결을 시도하였습니다.
+
+---
+
+## 문제 해결
+
+문제의 원인을 파악한 후, 사용자가 업로드하는 이미지들의 용량을 한번 줄여서 업로드 해야겠다는 생각을 하였습니다. 이를 위해 아래 글들을 찾아보며 아이디어를 얻었습니다.
+
+> [Stack Overflow-How to convert any image to webp?
+> ](https://stackoverflow.com/questions/62209609/how-to-convert-any-image-to-webp) >[웹사이트 최적화 방법 - 이미지 파트 | 올리브영 테크 블로그
+> ](https://oliveyoung.tech/blog/2021-11-22/How-to-Improve-Web-Performance-with-Image-Optimization/) >[개발자 퉁이리:티스토리](https://tooo1.tistory.com/610)
+>
+> [프론트엔드 이미지 최적화에 관하여](https://velog.io/@resyve/d7uz4czw)
+
+---
+
+**1. 이미지 포맷 변환**
+
+가장 먼저 시도한 방법은, 이미지 확장자를 webP로 변경하는 것 이었습니다.
+
+WebP는 구글에서 만든 이미지 포맷으로 무손실 압축과 손실 압축을 둘 다 지원합니다.
+많이 사용되는 PNG 이미지에 비해 무손실 압축의 경우 사이즈가 26% 정도 더 작습니다. 또한 동등한 SSIM 품질([구조적 유사성 지수 측정: 다른 종류의 디지털 이미지와 비디오의 지각된 품질을 예측](https://en.wikipedia.org/wiki/Structural_similarity_index_measure)) 색인에서 비슷한 JPEG 이미지보다 25~34% 더 작습니다. 손실 WebP의 경우에도, JPEG와 비슷하거나 더 나은 품질을 유지하면서 파일 크기를 줄일 수 있습니다.
+
+또한, 크롬의 LightHouse 에서도, JPEG나 PNG 보다는 압축 및 품질 특성이 뛰어난 WebP를 장려하며 웹 최적화 점수 향상에도 도움을 줄 수 있어 업로드하는 모든 사진들에 대해 WebP로의 변환을 시도하였습니다. 또한 저희 서비스의 경우 고화질의 이미지가 필요하지 않을거라는 생각에 80%의 품질로 손실 WebP를 사용하여 최대한 이미지 사이즈를 줄이고자 하였습니다.
+
+**2. 이미지 크기 조정**  
+두번째로 시도한 방법은, 저희가 사용하는 서비스의 UI 크기에 맞는 사이즈로 저장하여 용량을 줄이고자 하였습니다.
+
+저희 깊은산골짜기에는 기본적으로 모바일웹을 기준으로 화면이 구성되어 있고, 그 중 iPhone 14 PRO MAX를 기준으로 개발을 진행하였습니다. 모바일이 아닌 PC 브라우저 화면에서도 아래 사진처럼 '무신사'와 같은 모바일 뷰로 확인할 수 있도록 하였습니다.
+
+<img
+  src="https://velog.velcdn.com/images/tejaia/post/104c71cb-8c1e-4755-b4c0-7b8fa601e42e/image.png"
+  width="90%"
+  height="50%"
+/>
+
+따라서, 각 UI의 크기가 작았고, UI에 포함되는 사진들의 크기도 클 필요가 없었습니다.
+
+| ![](https://velog.velcdn.com/images/tejaia/post/b3f5fdbb-502b-48b8-9c16-425582c13f19/image.png) | ![](https://velog.velcdn.com/images/tejaia/post/64c03c98-ef0d-4350-881c-8848472a741c/image.png) |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+
+따라서, 업로드 된 이미지를 서비스에서 필요한 UI 크기에 맞게 리사이징 하였고, 이를 통해 s3에 저장되는 이미지용량을 크게 줄일 수 있었습니다. 다음은 처음보여드렸던 아래 이미지를 얼마나 줄일 수 있었는지 비교한 결과입니다.
+![압축된 이미지](https://velog.velcdn.com/images/tejaia/post/2cc84a9a-68c6-46f8-8466-7ab4f34dba35/image.webp)
+
+![](https://velog.velcdn.com/images/tejaia/post/56ad1189-18b3-401a-9037-5a4379fdab0c/image.PNG)
+
+![](https://velog.velcdn.com/images/tejaia/post/ff415679-7043-42d5-ac2f-ed9377c2abe6/image.PNG)
+
+이를 위해 작성한 코드는 아래와 같습니다.
+
+```typescript
+export const resizeImage = (
+  file: File,
+  maxWidth: number,
+  maxHeight: number
+): Promise<File> => {
+  return new Promise((resolve, reject) => {
+
+    // 1.파일 업로드
+    const reader = new FileReader();
+    reader.readAsDataURL(file); // 파일을 Data URL로 변환
+
+
+    reader.onload = (event) => {
+      const image = new window.Image();
+      image.src = event.target?.result as string;
+
+
+      image.onload = () => {
+        const canvas = document.createElement('canvas'); /
+        let { width, height } = image;
+
+        // 2. 이미지 리사이징 - 비율에 맞게 캔버스의 크기를 조정
+        if (width > maxWidth) {
+          height = (maxWidth / width) * height;
+          width = maxWidth;
+        }
+
+
+        if (height > maxHeight) {
+          width = (maxHeight / height) * width;
+          height = maxHeight;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        // 3. 캔버스에 이미지를 그리고 캔버스를 Blob 형식으로 webP로 변환하여 반환
+        canvas.getContext('2d')?.drawImage(image, 0, 0, width, height);
+
+
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              // Blob 데이터를 File 객체로 변환
+              const optimizedFile = new File([blob], file.name, {
+                type: blob.type,
+              });
+              resolve(optimizedFile); // 최적화된 파일을 반환
+            }
+          },
+          'image/webp',
+          0.8
+        );
+      };
+      // 이미지 로드 실패 시 에러 처리
+      image.onerror = () => reject(new Error('Failed to load image'));
+    };
+  });
+};
+
+```
+
+---
+
+## 결과와 교훈
+
+해결 과정에서 **서버 용량 제한**이 문제의 근본 원인임을 알게 되었습니다. 특히, **모바일 고화질 이미지**의 용량이 클 때 서버의 업로드 제한을 초과했던 것이 문제였습니다. 추후 확인해보니, 제 휴대폰카메라로 찍은 사진들이 평균 2~3MB의 JPG 이미지였고, 이러한 사진들을 여러 장 업로드 하는 과정에서 s3의 최대 용량을 초과하여 발생했던 문제임을 확인했습니다.
+
+이러한 부분에 있어서 백엔드 팀과의 사전 의사소통 부족을 느낄 수 있었습니다. 이미지업로드를 구현하면서 서로 이야기가 나왔던 부분인데, 이를 기록하지 않고 작동만을 확인하고 넘어간 나머지 잊어버리고 말았습니다. **서버 용량 제한**에 대한 정보를 사전에 알았더라면,하나하나 테스트하느라 문제 해결에 소요된 시간을 크게 단축할 수 있었을 것 같습니다.
+
+또한, 이번 경험을 통해 **테스트 코드 작성의 중요성**을 깊이 깨달았습니다. 문제의 원인을 찾고, 해결하는 동안 반복적으로 업로드 테스트를 하면서, **자동화된 테스트**가 있었다면 얼마나 효율적이었을지 느꼈습니다. 이를 계기로 **Jest**와 같은 테스트 도구에 관심을 가지게 되었고, 서비스의 다른 에러나 기능 추가 전에 도입해 보면서 조금 더 기능개발에 도움을 줄 수 있었습니다.
+
+---
+
+## 마치며
+
+아직도 친구들 앞에서 서비스를 보여주었을 때 에러가 터지자 느꼈던 당황스러움이 기억에 남습니다. 이렇게 정리하고 보니 심각한 문제가 아니었지만, 그당시에는 크게 느껴져서 이를 해결했을 때 뿌듯함도 남아 있습니다. 또 팀원 간의 명확한 커뮤니케이션의 중요성을 다시한번 느낄 수 있었고, 앞으로는 커뮤니케이션에 더 신경써야겠다고 생각하였습니다.
+
+---
+
+## 참고
+
+https://developers.google.com/speed/webp?hl=ko
+https://developer.chrome.com/docs/lighthouse/performance/uses-webp-images?hl=ko
