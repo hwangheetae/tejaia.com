@@ -1,19 +1,34 @@
-import Link from "next/link";
-
 import IconGithub from "../icon/Github";
+import IconBlog from "../icon/Blog";
+import FooterToolTipButton from "./footer-tooltip-button/FooterToolTip";
+
 // import IconLinkedin from "@/components/icon/LinkedIn";
 
 const Footer = () => {
   return (
     <footer className="mb-16 mt-20 flex flex-col items-center justify-center gap-4 text-center print:hidden">
       <div className="flex justify-center gap-4">
-        <Link href="https://github.com/hwangheetae" target="_blank">
+        <FooterToolTipButton
+          link={"https://github.com/hwangheetae"}
+          content={"깃허브로 이동"}
+        >
           <IconGithub
             className="fill-foreground transition hover:fill-pink-600"
             height={30}
             width={30}
           />
-        </Link>
+        </FooterToolTipButton>
+        <FooterToolTipButton
+          link={"https://velog.io/@tejaia/posts"}
+          content={"이전 블로그로 이동"}
+        >
+          <IconBlog
+            className=" fill-current text-foreground transition hover:text-pink-600"
+            height={30}
+            width={30}
+          />
+        </FooterToolTipButton>
+
         {/* <Link href="" target="_blank">
           <IconLinkedin
             className="fill-foreground transition hover:fill-pink-600"
