@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import Header from "@/components/header/page";
-import Notification from "@/components/notification/Notification";
+// import Notification from "@/components/notification/Notification";
 import Footer from "@/components/footer/Footer";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Header />
-        <Notification />
+        {/* <Notification /> */}
         <main className="flex-1 w-full max-w-3xl mx-auto px-4">{children}</main>
         <Footer />
       </body>
