@@ -11,7 +11,7 @@ const Header = () => {
               href="/"
               className="text-gray-800 text-2xl font-semibold hover:text-gray-600"
             >
-              tejaia.blog
+              tejaia.com
             </Link>
           </li>
 
