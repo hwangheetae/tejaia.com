@@ -1,55 +1,90 @@
 "use client";
-import { useState } from "react";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Bell } from "lucide-react";
-import Link from "next/link";
+import { useState, useEffect, ChangeEvent } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { Button } from "@/components/ui/button";
+
 const Notification = () => {
-  const [onOpen, setOnOpen] = useState(true);
-  const handleToggle = () => setOnOpen((prev) => !prev);
+  const [open, setOpen] = useState(false);
+  const [checked, setChecked] = useState(false);
+
+  const setCookie = (name: string, value: string, days: number) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  };
+
+  const getCookie = (name: string): string | null => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      const c = ca[i].trim();
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length);
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    if (getCookie("noShowUntilTomorrow") !== "true") {
+      setOpen(true);
+    }
+  }, []);
+
+  const handleClose = () => {
+    if (checked) {
+      setCookie("noShowUntilTomorrow", "true", 1);
+    }
+    setOpen(false);
+  };
+
+  const handleCheck = (e: ChangeEvent<HTMLInputElement>) => {
+    setChecked(e.target.checked);
+  };
 
   return (
-    <>
-      <div className="flex items-center justify-center mt-4">
-        {onOpen ? (
-          <>
-            <Alert className="w-full max-w-3xl flex flex-col items-center bg-yellow-100 border border-yellow-500 text-yellow-800 shadow-md">
-              <div className="flex items-center mb-2">
-                <Bell className="h-6 w-6 mr-2" />
-                <AlertTitle className="font-bold">
-                  블로그 이전 진행중
-                </AlertTitle>
-              </div>
-              <AlertDescription className="text-base text-center">
-                제 블로그 정상영업합니다!
-                <br />
-                <div className="flex items-center justify-center gap-4 mt-2">
-                  <Link
-                    href="https://velog.io/@tejaia/posts"
-                    target="_blank"
-                    className="text-base text-blue-600 font-bold"
-                  >
-                    이전 블로그 가기
-                  </Link>
-                </div>
-                <button
-                  onClick={handleToggle}
-                  className="text-sm text-gray-700 underline"
-                >
-                  접기
-                </button>
-              </AlertDescription>
-            </Alert>
-          </>
-        ) : (
-          <Alert className="w-full max-w-3xl flex flex-col bg-yellow-100 border border-yellow-500 text-yellow-800 shadow-md">
-            <button onClick={handleToggle} className=" text-blue rounded">
-              열기
-            </button>
-          </Alert>
-        )}
-      </div>
-    </>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="bg-white">
+        <DialogHeader className="flex items-center">
+          <DialogTitle>블로그 이전 진행 중</DialogTitle>
+          <DialogDescription className="text-center p-4 ">
+            현재 블로그 이전 중에 있습니다.
+            <br /> 이전 블로그를 확인하고 싶으시면&nbsp;
+            <a
+              href="https://velog.io/@tejaia/posts"
+              target="_blank"
+              className="underline text-blue-600"
+            >
+              링크
+            </a>
+            를 클릭하세요.
+          </DialogDescription>
+        </DialogHeader>
+        {/* 컨텐츠 영역: 체크박스와 닫기 버튼을 같은 row에 배치 */}
+        <div className="flex items-center justify-between mt-4">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={handleCheck}
+              className="h-4 w-4"
+            />
+            <span className="text-sm">24시간동안 보지 않기</span>
+          </label>
+          <DialogClose asChild>
+            <Button onClick={handleClose} variant="ghost">
+              닫기
+            </Button>
+          </DialogClose>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

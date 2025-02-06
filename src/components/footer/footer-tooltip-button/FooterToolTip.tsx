@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ReactNode } from "react";
 
 import {
@@ -23,9 +22,9 @@ const FooterToolTipButton = ({
     <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Link href={link} target="_blank">
+          <a href={link} target="_blank">
             {children}
-          </Link>
+          </a>
         </TooltipTrigger>
         <TooltipContent side="top">
           <p>{content}</p>

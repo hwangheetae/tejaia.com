@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-// import Notification from "@/components/notification/Notification";
 import { ThemeProvider } from "@/config/ThemeProvider";
+import Notification from "@/components/notification/Notification";
 import Header from "@/components/header/page";
 import Footer from "@/components/footer/Footer";
 import Giscus from "@/components/giscus/Giscus";
@@ -22,7 +22,7 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <Header />
-          {/* <Notification /> */}
+          <Notification />
           <div className="flex-1 w-full max-w-3xl mx-auto px-4">
             <main>{children}</main>
             <Giscus />
