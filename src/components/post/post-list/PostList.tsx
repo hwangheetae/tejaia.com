@@ -7,7 +7,7 @@ const PostList = async () => {
   const postList = await getPostList();
   return (
     <div>
-      <h2 className="text-gray-800 text-2xl font-bold m-6">게시글</h2>
+      <h2 className=" text-2xl font-bold my-6">게시글</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {postList.map((post) => {
           const { title, desc, dateString, thumbnail } = post.postDetail;

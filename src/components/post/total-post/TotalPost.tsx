@@ -10,7 +10,7 @@ interface PostProps {
 const TotalPost = ({ post }: PostProps) => {
   const { content, ...postDetail } = post;
   return (
-    <div>
+    <div className="prose dark:prose-invert">
       <PostHead grayMatter={postDetail} />
       <PostBody content={content} />
       <Giscus />
