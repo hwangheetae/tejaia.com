@@ -6,6 +6,7 @@ import Notification from "@/components/notification/Notification";
 import Header from "@/components/header/page";
 import Footer from "@/components/footer/Footer";
 import Giscus from "@/components/giscus/Giscus";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "희태의 개발블로그",
@@ -29,6 +30,7 @@ export default function RootLayout({
           </div>
           <Footer />
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

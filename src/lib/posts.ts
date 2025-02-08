@@ -24,7 +24,7 @@ export const parsePostDetail = async (
   const { data: grayMatter, content } = matter(file);
 
   const title = grayMatter.title || "제목없음";
-  const date = new Date(grayMatter.date || Date.now());
+  const date = new Date(grayMatter.date || "1970-01-01");
   const dateString = dayjs(date).format("YYYY-MM-DD");
   const thumbnail = grayMatter.thumbnail || "/posts/default-thumbnail.jpg";
   const desc = grayMatter.desc || "";

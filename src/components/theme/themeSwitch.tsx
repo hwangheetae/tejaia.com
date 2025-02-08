@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 import { Button } from "../ui/button";
 import { Sun, Moon } from "lucide-react";
 
-const ThemeSwtich = () => {
+const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -38,4 +38,4 @@ const ThemeSwtich = () => {
   );
 };
 
-export default ThemeSwtich;
+export default ThemeSwitch;

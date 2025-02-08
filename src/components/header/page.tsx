@@ -1,25 +1,26 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import ThemeSwtich from "../theme/themeSwitch";
+import ThemeSwitch from "../theme/themeSwitch";
 
 const Header = () => {
   return (
-    <Card className=" shadow-md p-4">
+    <Card className="shadow-md p-4">
       <nav>
         <ul className="flex items-center w-full max-w-3xl mx-auto justify-between">
-          <li>
+          {/* Home과 About을 하나의 그룹으로 묶음 */}
+          <li className="flex items-center gap-20">
             <Link href="/">
-              <h1 className=" font-nanum-bold text-2xl font-semibold ">
+              <h1 className="font-nanum-bold text-2xl font-semibold">
                 tejaia.com
               </h1>
             </Link>
-          </li>
-          <ThemeSwtich />
-          {/* <li>
             <Link href="/about">
-              <a className="text-gray-800 text-lg font-semibold hover:text-gray-600">About</a>
+              <h2 className="font-nanum-bold font-semibold">About</h2>
             </Link>
-          </li> */}
+          </li>
+          <li>
+            <ThemeSwitch />
+          </li>
         </ul>
       </nav>
     </Card>
