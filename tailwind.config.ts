@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import * as tailwindAnimate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
 
 export default {
   darkMode: ["class"],
@@ -67,7 +68,7 @@ export default {
       typography: {
         DEFAULT: {
           css: {
-            "h,h2, h3, h4": {
+            "h2, h3, h4": {
               scrollMarginTop: "5rem",
             },
             p: {
@@ -103,6 +104,9 @@ export default {
             "code::after": {
               content: "none",
             },
+            "code[data-line-numbers]": {
+              counterReset: "line",
+            },
 
             "code[data-line-numbers] > [data-line]::before": {
               counterIncrement: "line",
@@ -123,6 +127,9 @@ export default {
 
             'code[data-line-numbers-max-digits="3"] > [data-line]::before': {
               width: "2rem",
+            },
+            'code[data-line-numbers-max-digits="4"] > [data-line]::before': {
+              width: "2.25rem",
             },
 
             pre: {
@@ -149,18 +156,6 @@ export default {
             },
             ".dark pre code span": {
               color: "var(--shiki-dark)",
-            },
-
-            "[data-highlighted-line]": {
-              backgroundColor: "rgba(253, 224, 71, 0.2)",
-            },
-
-            ".project img": {
-              marginTop: "0px !important",
-            },
-
-            ".project p,ul,li": {
-              fontSize: 15,
             },
 
             u: {
@@ -192,5 +187,5 @@ export default {
       },
     },
   },
-  plugins: [tailwindAnimate],
+  plugins: [tailwindAnimate, typography],
 } satisfies Config;
