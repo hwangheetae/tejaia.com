@@ -24,7 +24,7 @@ export default function RootLayout({
         <ThemeProvider>
           <Header />
           <Notification />
-          <div className="flex-1 w-full max-w-3xl mx-auto px-4">
+          <div className="layout">
             <main>{children}</main>
             <Giscus />
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, ChangeEvent } from "react";
+import { setCookie, getCookie } from "@/hooks/useCookie";
 import {
   Dialog,
   DialogContent,
@@ -14,22 +15,6 @@ import { Button } from "@/components/ui/button";
 const Notification = () => {
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(false);
-
-  const setCookie = (name: string, value: string, days: number) => {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-  };
-
-  const getCookie = (name: string): string | null => {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(";");
-    for (let i = 0; i < ca.length; i++) {
-      const c = ca[i].trim();
-      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length);
-    }
-    return null;
-  };
 
   useEffect(() => {
     if (getCookie("noShowUntilTomorrow") !== "true") {

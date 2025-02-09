@@ -4,18 +4,17 @@ import ThemeSwitch from "../theme/themeSwitch";
 
 const Header = () => {
   return (
-    <Card className="shadow-md p-4">
+    <Card className="sticky top-0  z-50  p-4 ">
       <nav>
         <ul className="flex items-center w-full max-w-3xl mx-auto justify-between">
-          {/* Home과 About을 하나의 그룹으로 묶음 */}
           <li className="flex items-center gap-20">
             <Link href="/">
-              <h1 className="font-nanum-bold text-2xl font-semibold">
+              <h1 className="font-nanum-bold md:text-2xl text-lg ">
                 tejaia.com
               </h1>
             </Link>
             <Link href="/about">
-              <h2 className="font-nanum-bold font-semibold">About</h2>
+              <h2 className="font-nanum-bold ">About</h2>
             </Link>
           </li>
           <li>

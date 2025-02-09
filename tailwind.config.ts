@@ -67,7 +67,7 @@ export default {
       typography: {
         DEFAULT: {
           css: {
-            "h2, h3, h4": {
+            "h,h2, h3, h4": {
               scrollMarginTop: "5rem",
             },
             p: {
