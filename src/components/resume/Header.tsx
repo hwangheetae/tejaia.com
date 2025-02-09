@@ -36,7 +36,12 @@ interface SocialButtonProps {
 
 function SocialButton({ href, icon: Icon, label }: SocialButtonProps) {
   return (
-    <Button className="size-8" variant="outline" size="icon" asChild>
+    <Button
+      className="size-8 fill-current text-foreground"
+      variant="outline"
+      size="icon"
+      asChild
+    >
       <a href={href} aria-label={label} target="_blank">
         <Icon className="size-4" aria-hidden="true" />
       </a>
@@ -71,12 +76,15 @@ function ContactButtons({ contact }: ContactButtonsProps) {
               <MailIcon className="size-4" aria-hidden="true" />
             </Button>
           </D.DialogTrigger>
-          <D.DialogContent className="max-w-[300px] bg-white">
+          <D.DialogContent
+            className="max-w-[300px] bg-white dark:bg-slate-900"
+            data-theme="dark"
+          >
             <D.DialogHeader>
               <D.DialogTitle className="p-0">Email Address</D.DialogTitle>
               <D.DialogDescription></D.DialogDescription>
             </D.DialogHeader>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 ">
               <div className="grid flex-1 gap-2">
                 <label htmlFor="link" className="sr-only">
                   Link
@@ -90,7 +98,7 @@ function ContactButtons({ contact }: ContactButtonsProps) {
               <CopyLinkButton
                 variant="default"
                 url={RESUME_DATA.contact.email}
-                className="p-3"
+                className="p-3 "
               />
             </div>
           </D.DialogContent>

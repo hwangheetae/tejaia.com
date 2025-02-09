@@ -11,7 +11,7 @@ const Footer = () => {
           content={"깃허브로 이동"}
         >
           <IconGithub
-            className="fill-foreground transition hover:fill-pink-600"
+            className="fill-current text-foreground  transition hover:fill-pink-600"
             height={30}
             width={30}
           />

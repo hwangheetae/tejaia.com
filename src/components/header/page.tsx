@@ -9,9 +9,7 @@ const Header = () => {
         <ul className="flex items-center w-full max-w-3xl mx-auto justify-between">
           <li className="flex items-center gap-20">
             <Link href="/">
-              <h1 className="font-nanum-bold md:text-2xl text-lg ">
-                tejaia.com
-              </h1>
+              <h1 className="font-nanum-bold text-lg ">tejaia.com</h1>
             </Link>
             <Link href="/about">
               <h2 className="font-nanum-bold ">About</h2>
