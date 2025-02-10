@@ -54,7 +54,7 @@ interface ContactButtonsProps {
   personalWebsiteUrl?: string;
 }
 
-function ContactButtons({ contact }: ContactButtonsProps) {
+export function ContactButtons({ contact }: ContactButtonsProps) {
   return (
     <div
       className="flex gap-x-1 pt-1  text-sm text-foreground/80 print:hidden"
