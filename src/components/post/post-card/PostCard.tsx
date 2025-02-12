@@ -26,7 +26,6 @@ const PostCard = ({
             src={thumbnail}
             alt={`thumbnail for ${title}`}
             fill
-            quality={80}
             priority
             style={{
               objectFit: "cover",

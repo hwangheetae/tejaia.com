@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <Card className="sticky top-0  z-50  p-4 ">
       <nav>
-        <ul className="flex items-center w-full max-w-4xl mx-auto justify-between">
+        <ul className="flex items-center w-full max-w-3xl mx-auto justify-between">
           <li className="flex items-center gap-20">
             <Link href="/">
               <h1 className="font-nanum-bold text-lg ">tejaia.com</h1>

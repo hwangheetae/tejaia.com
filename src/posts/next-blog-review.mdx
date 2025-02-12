@@ -1,0 +1,136 @@
+---
+title: "📃멀쩡한 velog를 놔두고 왜 만들죠?"
+date: 2025-02-12
+desc: 블로그를 만들었습니다.
+thumbnail: /posts/blog-review.jpg
+---
+
+### 계기
+
+- velog의 고정된 기능에 대해 불편한 점들이 있었다. (html 태그, **작성페이지에서 커서가 투명함**)
+- 취업 준비하면서 강의를 듣는데 점점 현타가 옴. 내가 강의형 학습과 안 맞는 듯했고, 자꾸 졸기만 해서 차라리 공식 문서를 보면서 프로젝트를 직접 해보자고 결심했다.
+
+Figma에서 기본적인 기획을 하고 바로 프로젝트를 시작했다.
+
+![](https://velog.velcdn.com/images/tejaia/post/c2acf7a0-4df6-458d-a8cc-0844cd5a8d0a/image.png)
+
+그동안 프로젝트를 할 때마다 기간이 점점 길어져 마무리가 흐지부지되는 경우가 많았다. 그래서 이번에는 기초 기능만 빠르게 추가하고 곧바로 배포하기로 마음먹었다. 배포는 무료이고 자동 SSL과 CD를 지원하는 Vercel을 사용하였다.
+
+Next.js를 기초만 알던 상태에서 바로 프로젝트에 들어감. 개발 중 가장 큰 도움을 준 곳은 이 [블로그](https://d5br5.dev/blog/nextjs_blog/setup)였다. 구현하려는 기본 기능들(1. 저장된 글 목록 보여주기, 2. 마크다운 보여주기, 3. 썸네일 보여주기)에 대해 친절하게 정리돼 있어서 많은 시간을 절약할 수 있었다.
+
+### 1. 시행착오
+
+처음에는 next.js + vanilla js + css.module로 간단히 시작하였다.
+그런데 mdx 파싱 쪽에서 플러그인들이 제대로 적용되지 않는 문제가 생겼다. 해결하기가 까다로워서, 결국 참고하던 블로그와 똑같이 **TypeScript + Tailwind + shadcn/ui** 조합으로 프로젝트를 다시 시작gkduTek.
+
+### 2.기본 기능 구현 과정
+
+아까 말한 1) 글 목록, 2) 마크다운, 3) 썸네일은 무난히 구현했다.
+다만 디자인과 CSS가 가장 골치였는데, 원하는 대로 디자인을 뽑아내기가 번거롭고 어려워서 일단은 미니멀한 디자인으로 타협하였다.
+또 마크다운과 코드 하이라이트를 제대로 적용하는 과정에서 global.css와 tailwind.config.ts가 충돌하는 문제가 있었는데, 참고하던 블로그와 내 프로젝트의 Next.js 버전이 달라 에러를 수정하는데 시간이 소요되었다.
+
+또, shadcn/ui라는 걸 처음 써봤는데, 라이브러리를 따로 설치하지 않고 필요한 컴포넌트만 가져와 커스텀할 수 있다는 점이 매력적이었음.
+
+### 3.배포
+
+기본 기능들을 만든 후 vercl을 통해 배포하였음. 지금껏 커스텀 도메인을 사용해본적이 없어 두려움이 있었는데, 가비아에서 도메인 구입후 별 다른 설정 없이 vercel을 통해 할 수 있었다. 다음에는 ssl 설정을 비롯한 웹서버 구축도 해보고 싶다.
+
+### 4. 24시간 알림 팝업 기능
+
+내가 이번 블로그에서 새롭게 구현시도해본것은 보통 다른 홈페이지 에 접속했을 때 뜨는 '24시간동안 보지 않기' 기능이었다. 블로그의 기능수정이 언제 완료될지 모르는 만큼 이를 사용자에게 고지하기 위해 Dialog 컴포넌트를 띄우고, 일정 기간 안 보이도록 설정하고 싶었다.
+
+처음에는 localStorage에 24시간을 어떻게 설정하지 고민했는데, 자료를 찾아보니 쿠키로도 쉽게 구현 가능하다는 걸 알게 되었다. 그동안 localStorage만 써와서 쿠키가 조금 낯설었지만, 이번 기회에 쿠키를 사용해 24시간이 지났는지 체크하도록 만들었다.
+
+```typescript
+export const setCookie = (name: string, value: string, days: number) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+};
+
+export const getCookie = (name: string): string | null => {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    const c = ca[i].trim();
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length);
+  }
+  return null;
+};
+```
+
+### 5. 테마 설정과 성능 이슈
+
+원래는 Context API를 쓰려고 했지만, 공식 문서를 보니 next-themes라는 라이브러리를 사용하면 쉽게 테마 전환이 가능하다고 해서 적용했다. 그런데 테마 적용 후 부분적으로 에러가 발생했고, 특히 배포 환경에서 페이지가 심각하게 느려지는 문제가 있었음.
+
+![](https://velog.velcdn.com/images/tejaia/post/0b318e60-f4e2-484f-abaa-d2423d57e8bc/image.gif)
+
+![](https://velog.velcdn.com/images/tejaia/post/a5a2652a-5973-45da-82f7-c4dfafd7d973/image.gif)
+
+개발 환경(dev)에서는 정상적으로 테마가 전환됐지만, 배포(production) 버전에서는 렌더링이 크게 지연됨. 처음으로 Chrome DevTools Performance 탭에 들어가 분석했는데, 무슨 말인지 어렵긴 했으나 이번에 공부해보기로 마음먹었다.
+
+<p align="center">
+  <img
+    src="https://velog.velcdn.com/images/tejaia/post/44184603-5db2-4696-ae77-f76b94e14834/image.png"
+    alt="performance-tab"
+    width="50%"
+    height="50%"
+  />
+</p>
+
+우선 처음 탭을 열자마자 보이는 빨간 경고 표시로 인해 확실히 문제가 있다는 건 알 수 있었다.
+
+여기서 LCP, CLS, INP에 대해 알아보자.
+
+1. LCP(Largest Contentful Paint)
+   사용자가 페이지로 처음 이동한 시점을 기준으로 표시 영역에 표시되는 가장 큰 이미지, 텍스트 블록 또는 동영상의 렌더링 시간이다. 화면에서 가장 중요한(또는 눈에 띄는) 요소가 언제 완전히 나타나는지 보여주므로, 페이지가 ‘실질적으로’ 로드된 순간을 가늠하기 쉽다. 이 지표가 짧을수록 콘텐츠를 빠르게 확인할 수 있다고 느끼게 된다. 우수한 사용자 환경을 제공하기 위해 사이트에서는 최대 콘텐츠 렌더링 시간이 2.5초 이하여야 한다.
+
+2. CLS(Cumulative Layout Shift)
+   페이지 로드 과정에서 레이아웃이 예기치 않게 움직이는 정도를 측정하는 지표다. 화면 요소가 갑자기 밀리거나 아래로 튀어 UI가 혼동되는 현상이 많으면 점수가 높아진다. 예전 프로젝트에서 input이나 버튼을 누를 때 이러한 경험들을 해본 적이 있다.
+
+3. INP(Interaction to Next Paint)
+   사용자가 페이지에서 어떤 조작(예: 버튼 클릭, 입력 등)을 실행한 뒤, 브라우저가 그 변화된 상태를 실제로 렌더(다음 페인트)하는 데 걸리는 시간을 측정하는 지표다. 페이지가 빠르게 로드되어도, 사용자 액션에 대한 반응이 느리면 전반적인 체감 성능이 떨어진다고 느낀다고 한다. 권장범위는 200ms 이하라고 한다.
+
+게다가 어떤 화면을 보고 있느냐에 따라 랜더링속도가 달라지는 것 또한 문제였다. 예를 들어 맨 처음 로드 시에는 기존 현상처럼 테마 변경이 느리게 발생하였으나, 스크롤을 내리는 등 보고 있는 화면이 바뀐경우 정상적으로 동작하였다.
+
+원인을 찾기 위해 GPT의 도움을 받아 다음과 같이 4가지 상황에서 랜더링을 확인함
+
+1. production(vercel) 환경에서 렌더링 시간 조사
+   ![](https://velog.velcdn.com/images/tejaia/post/dce26d6b-6239-4532-8618-95a5357ff6b4/image.png)
+
+2. dev 환경에서 랜더링 시간 조사
+   ![](https://velog.velcdn.com/images/tejaia/post/5427821e-1b5f-4bd9-beea-690f99c1af1f/image.png)
+
+3. production(local) (npm build - npm start) 에서 시간조사
+   2와 비슷함
+
+4. production 환경에서, 렌더링 지연이 적게 일어나는 화면
+   ![](https://velog.velcdn.com/images/tejaia/post/c1b58407-86de-43ce-b8f3-3924e888654b/image.png)
+
+vercel에 배포된 경우를 제외하고 전부 테마 변경 시 280~300ms의 시간이 걸린 반면, 첫번째 경우에는 1.18s가 소요됨을 확인 할 수 있다. 또한 미처 캡쳐를 하지 못했지만, 다른 경우들에 비해 Recalculate Style의 값이 상대적으로 높게 측정됨을 확인하였다.
+![](https://velog.velcdn.com/images/tejaia/post/bed2e5c2-9d2b-450d-9bf3-1baff127b618/image.png)
+
+#### 2차 멘붕
+
+반복된 실험과 추측 끝에, 저번에도 문제를 일으켰던 10mb짜리의 이미지가 포함된 경우 랜더링이 지연됨을 확인했다. 블로그 포스트들을 이전하면서 10mb의 jpeg 이미지를 썸네일로 썼었는데,
+공식문서에서는 next/image가 자동으로 이미지 최적화를 적용한다고 알고 있었기 때문에 문제가 되지 않을거라는 생각에서 였다. 개발환경에서 테스트 해보니 모든 이미지들이 정상적으로 webp로 변환되어 사이즈가 최적화 되어 있었고, 렌더링 또한 정상이었다.
+
+그런데, production 환경에서 테스트 해보니 그러지 않았다. 이를 해결하기 위해 next/image의 quality prop을 적용해 보았지만, 여전희 vercel로 배포한 환경에서는 여전히 문제가 발생하였다. 다른 png, jpeg파일들은 전부 webp로 변환되어 있는데, 문제를 일으키는 해당 이미지만 production 환경에서는 적용이 안되었다.
+
+![](https://velog.velcdn.com/images/tejaia/post/c5b4ee96-fee2-4ed3-80d7-e6508b645aa4/image.png)
+
+구글링 결과, 이런 제한이 있다는 걸 알게 됐다.
+
+![](https://velog.velcdn.com/images/tejaia/post/dc9ba40f-27d3-4663-9443-bd6c9b03c4c3/image.png)
+
+> **최대 이미지 크기**: 최적화할 수 있는 이미지의 최대 크기는 10MB다. 이 제한을 초과하면 원본 이>미지가 그대로 제공되거나 오류가 발생할 수 있다.
+>
+> **최대 이미지 해상도**: 각 소스 이미지의 최대 너비와 높이는 8192픽셀이다.
+>
+> **지원되는 이미지 형식**: .jpeg, .png, .webp 형식만 최적화할 수 있고, 다른 형식은 원본 그대로 제공된다.
+
+따라서 올리는 이미지에 대해 어느정도 사이즈를 줄여야 했는데, 불특정 사용자의 입력을 받는 것이 아닌 내가 작성한 썸네일만 업로드를 하기 때문에 이전에 변경해두었던 webp 파일로 수정하여 문제를 해결할 수 있었다.
+
+![](https://velog.velcdn.com/images/tejaia/post/1754af54-b7fe-4507-b92b-5fc3ff9ae178/image.png)
+
+![](https://velog.velcdn.com/images/tejaia/post/994f558f-f062-4345-bd98-a898fc448c39/image.gif)
