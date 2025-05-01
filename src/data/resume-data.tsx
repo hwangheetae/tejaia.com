@@ -6,15 +6,11 @@ export const RESUME_DATA = {
   initials: "Heetae Hwang",
   location: "대한민국 고양시",
   locationLink: "https://www.google.com/maps/place/goyang",
-  about: "만들고 싶은걸 만들어가는 개발자",
+  about: "Frontend Developer",
   summary: (
     <>
-      DX의 개선이 곧 사용자 경험을 향상시키고, 더 나은 서비스를 제공할 수 있다고
-      생각합니다.
-      <br />
-      <br /> 개발 생태계에 실질적인 가치를 더하고, 이를 통해 사용자에게 더 큰
-      가치를 제공하는 개발자를 꿈꿉니다. <br />
-      <br /> 문제를 끊임없이 고민하고 어떻게든 해결하는 것이 저의 장점이라고
+      주니어 프론트엔드 개발자입니다. <br /> <br />
+      문제를 끊임없이 고민하고 어떻게든 해결하는 것이 저의 장점이라고
       생각합니다.
     </>
   ),
