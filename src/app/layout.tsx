@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { ThemeProvider } from "@/config/ThemeProvider";
-import Notification from "@/components/notification/Notification";
+// import Notification from "@/components/notification/Notification";
 import Header from "@/components/header/page";
 import Footer from "@/components/footer/Footer";
 import Giscus from "@/components/giscus/Giscus";
@@ -23,7 +23,7 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <Header />
-          <Notification />
+          {/* <Notification /> */}
           <div className="layout">
             <main>{children}</main>
             <Giscus />
