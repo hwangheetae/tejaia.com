@@ -9,11 +9,13 @@ thumbnail: /posts/image-error-thumbnail.webp
 
 ‘**깊은산골짜기**’ 프로젝트를 마치고, 친구들과 함께 계곡에 방문한 저는 제가 만든 서비스를 자랑하고자 깊은산골짜기를 소개하고 사진을 찍어 리뷰를 작성했습니다. 하지만 개발환경 및 집에서는 발견하지 못한, 처음 보는 500 에러를 발견하였습니다. 단순한 리뷰나 사용자 명 변경에서는 문제가 발생하지 않았지만, 이미지 업로드 시 에러가 지속적으로 발생했습니다. 집으로 돌아온 후 다시 테스트를 해보니, 신기하게도 계곡에서는 분명 발생했던 이미지 에러가 다시 발생하지 않는 것이었습니다.
 
-<img
-  src="https://velog.velcdn.com/images/tejaia/post/f6ca9e2c-fc21-45b1-afeb-735b2f491d2d/image.png"
-  width="30%"
-  height="30%"
-/>
+<p align="center">
+  <img
+    src="https://velog.velcdn.com/images/tejaia/post/f6ca9e2c-fc21-45b1-afeb-735b2f491d2d/image.png"
+    width="50%"
+    height="30%"
+  />
+</p>
 
 이미 프로젝트는 완료되었고 팀원들도 뿔뿔히 흩어진 상황에서 `특정 상황에서만 발생하는 문제를 수정해야 하나` 라는 고민에 빠졌습니다. 하지만 가장 핵심 기능 중 하나였던 기능이 동작하지 않는다면 불편함을 느낀 사용자들의 서비스 이용에 불편함을 주고, 프로젝트의 목표를 잃는 거라 생각하였습니다.
 
@@ -81,23 +83,49 @@ WebP는 구글에서 만든 이미지 포맷으로 무손실 압축과 손실 �
 
 저희 깊은산골짜기에는 기본적으로 모바일웹을 기준으로 화면이 구성되어 있고, 그 중 iPhone 14 PRO MAX를 기준으로 개발을 진행하였습니다. 모바일이 아닌 PC 브라우저 화면에서도 아래 사진처럼 '무신사'와 같은 모바일 뷰로 확인할 수 있도록 하였습니다.
 
-<img
-  src="https://velog.velcdn.com/images/tejaia/post/104c71cb-8c1e-4755-b4c0-7b8fa601e42e/image.png"
-  width="90%"
-  height="50%"
-/>
+<p align="center">
+  <img
+    src="https://velog.velcdn.com/images/tejaia/post/104c71cb-8c1e-4755-b4c0-7b8fa601e42e/image.png"
+    width="50%"
+    height="50%"
+  />
+</p>
 
 따라서, 각 UI의 크기가 작았고, UI에 포함되는 사진들의 크기도 클 필요가 없었습니다.
 
-| ![](https://velog.velcdn.com/images/tejaia/post/b3f5fdbb-502b-48b8-9c16-425582c13f19/image.png) | ![](https://velog.velcdn.com/images/tejaia/post/64c03c98-ef0d-4350-881c-8848472a741c/image.png) |
-| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+<p align="center">
+  <img
+    src="https://velog.velcdn.com/images/tejaia/post/64c03c98-ef0d-4350-881c-8848472a741c/image.png"
+    width="30%"
+    height="30%"
+  />
+</p>
 
 따라서, 업로드 된 이미지를 서비스에서 필요한 UI 크기에 맞게 리사이징 하였고, 이를 통해 s3에 저장되는 이미지용량을 크게 줄일 수 있었습니다. 다음은 처음보여드렸던 아래 이미지를 얼마나 줄일 수 있었는지 비교한 결과입니다.
-![압축된 이미지](https://velog.velcdn.com/images/tejaia/post/2cc84a9a-68c6-46f8-8466-7ab4f34dba35/image.webp)
 
-![](https://velog.velcdn.com/images/tejaia/post/56ad1189-18b3-401a-9037-5a4379fdab0c/image.PNG)
+<p align="center">
+  <img
+    src="https://velog.velcdn.com/images/tejaia/post/2cc84a9a-68c6-46f8-8466-7ab4f34dba35/image.webp"
+    width="50%"
+    height="50%"
+  />
+</p>
 
-![](https://velog.velcdn.com/images/tejaia/post/ff415679-7043-42d5-ac2f-ed9377c2abe6/image.PNG)
+<p align="center">
+  <img
+    src="https://velog.velcdn.com/images/tejaia/post/56ad1189-18b3-401a-9037-5a4379fdab0c/image.PNG"
+    width="50%"
+    height="50%"
+  />
+</p>
+
+<p align="center">
+  <img
+    src="https://velog.velcdn.com/images/tejaia/post/ff415679-7043-42d5-ac2f-ed9377c2abe6/image.PNG"
+    width="50%"
+    height="50%"
+  />
+</p>
 
 이를 위해 작성한 코드는 아래와 같습니다.
 
